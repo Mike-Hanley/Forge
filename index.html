@@ -31,11 +31,11 @@
   .card h2{font-size:13px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);margin-bottom:14px;font-weight:600}
   .row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}
   .row:last-child{border-bottom:none}
-  .check{min-width:30px;height:30px;border-radius:9px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;font-size:16px}
+  .check{min-width:44px;height:44px;border-radius:12px;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;font-size:16px}
   .check.on{background:var(--accent);border-color:var(--accent);color:#1a1206}
   .row .label{flex:1;font-size:16px;line-height:1.3}
   .row.done .label{color:var(--muted);text-decoration:line-through}
-  .del{color:var(--muted);font-size:20px;padding:4px 8px;min-width:36px;text-align:center}
+  .del{color:var(--muted);font-size:20px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none;border:none;cursor:pointer;}
   .addbar{display:flex;gap:8px;margin-top:14px}
   input,select{font-family:var(--font);font-size:16px;background:var(--surface2);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:13px;width:100%}
   input:focus,select:focus{outline:none;border-color:var(--accent-dim)}
@@ -53,7 +53,7 @@
   .pill .n{font-family:var(--serif);font-size:22px}
   .pill .t{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
   .day-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:4px;-webkit-overflow-scrolling:touch}
-  .day-tabs button{flex-shrink:0;background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600}
+  .day-tabs button{flex-shrink:0;background:var(--surface2);border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:9px 14px;font-size:14px;font-weight:600;min-height:44px;}
   .day-tabs button.sel{background:var(--accent);color:#1a1206;border-color:var(--accent)}
   .meal{font-size:14px;color:var(--muted);padding:8px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
   .meal:last-child{border:none}
@@ -70,7 +70,7 @@
   textarea{font-family:var(--font);font-size:15px;line-height:1.5;background:var(--surface2);border:1px solid var(--line);color:var(--txt);border-radius:11px;padding:13px;width:100%;min-height:120px;resize:vertical;user-select:text;-webkit-user-select:text}
   .note-sep{border-bottom:1px solid var(--line);margin-bottom:16px;padding-bottom:16px}
   .task-time{font-size:12px;color:var(--accent-dim);margin-top:3px;font-variant-numeric:tabular-nums}
-  .edit-ic{color:var(--muted);font-size:17px;padding:4px 7px;min-width:32px;text-align:center;flex-shrink:0}
+  .edit-ic{color:var(--muted);font-size:17px;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:none;border:none;cursor:pointer;}
   .row.editing{flex-wrap:wrap;align-items:flex-start;gap:8px}
   .hist-cell{border-radius:5px;cursor:pointer;transition:transform .1s}
   .hist-cell:active{transform:scale(.85)}
@@ -95,6 +95,24 @@
         <div class="pill" id="h-workout-pill" style="cursor:pointer" onclick="nav('train')"><div class="n" id="h-workout">—</div><div class="t">workout</div></div>
       </div>
     </div>
+
+    <!-- Goals / Manifestation -->
+    <div class="card">
+      <h2>My Goals</h2>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-bottom:8px">Long Term Vision</div>
+      <div id="g-long-list"></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-top:16px;margin-bottom:8px">Near Term</div>
+      <div id="g-short-list"></div>
+      <div style="display:flex;gap:8px;margin-top:16px;align-items:center">
+        <input id="goal-inp" placeholder="Write a goal…" style="flex:1" enterkeyhint="done">
+        <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;flex-shrink:0">
+          <button id="goal-type-long" onclick="setGoalType('long')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--accent);color:#1a1206;border:none;font-weight:600;cursor:pointer">Long</button>
+          <button id="goal-type-short" onclick="setGoalType('short')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--surface2);color:var(--muted);border:none;border-left:1px solid var(--line);cursor:pointer">Near</button>
+        </div>
+        <button class="btn" onclick="addGoal()" style="padding:0 16px">Add</button>
+      </div>
+    </div>
+
     <div class="card">
       <h2>Money Snapshot</h2>
       <div class="grid2" style="margin-bottom:12px">
@@ -350,6 +368,14 @@
 <!-- NOTES / JOURNAL -->
 <div class="view" id="v-notes">
   <div class="wrap">
+    <div class="card" id="nc-todos">
+      <h2>To-Do List</h2>
+      <div id="todosList"></div>
+      <div class="miniadd" style="margin-top:14px">
+        <input id="todo-inp" placeholder="Add a to-do… (pay rent, oil change…)" enterkeyhint="done">
+        <button class="btn" onclick="addTodo()">Add</button>
+      </div>
+    </div>
     <div class="card" id="nc-journal">
       <h2>Today's Journal</h2>
       <div style="font-size:13px;color:var(--muted);margin-bottom:10px" id="journalDate"></div>
@@ -426,7 +452,8 @@ const blank=()=>({
   notes:[],                                        // [{id,title,body}] pinned note blocks
   routines:[],                                     // [{id,title,body}] workout routine library
   recipes:[],                                      // [{id,title,body}] recipe library
-  goalsLong:[], goalsShort:[]                      // [{t,done,id}]
+  goalsLong:[], goalsShort:[],                      // [{t,id}]
+  todos:[]                                          // [{id,t,done}]
 });
 let S=load();
 
@@ -477,7 +504,7 @@ function renderRoutine(){
     const done=!!dm[t.id];
     const row=document.createElement('div');row.className='row'+(done?' done':'');
     const timeHtml=t.time?`<div class="task-time">${esc(t.time)}</div>`:'';
-    row.innerHTML=`<div class="check ${done?'on':''}">${done?'✓':''}</div><div class="label" style="flex:1">${esc(t.t)}${timeHtml}</div><div class="edit-ic">✎</div><div class="del">×</div>`;
+    row.innerHTML=`<div class="check ${done?'on':''}">${done?'✓':''}</div><div class="label" style="flex:1">${esc(t.t)}${timeHtml}</div><button class="edit-ic">✎</button><button class="del">×</button>`;
     if(selDay!==todayIdx){row.querySelector('.check').style.opacity='0.35';row.querySelector('.check').style.cursor='default';}
     row.querySelector('.check').onclick=()=>{if(selDay!==todayIdx){toast('Tasks can only be checked off on today');return;}dm[t.id]?delete dm[t.id]:dm[t.id]=true;save();render()};
     row.querySelector('.edit-ic').onclick=()=>{
@@ -524,9 +551,9 @@ function renderDiet(){
   else plan.forEach((x,idx)=>{
     const d=document.createElement('div');d.className='meal';
     const logBtn=selDietDay===todayIdx
-      ?`<button style="font-size:12px;min-height:34px;padding:0 10px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;cursor:pointer;flex-shrink:0" data-log>↓ Log</button>`
+      ?`<button style="font-size:12px;min-height:44px;padding:0 12px;background:none;border:1px solid var(--accent);color:var(--accent);border-radius:8px;cursor:pointer;flex-shrink:0" data-log>↓ Log</button>`
       :'';
-    d.innerHTML=`<b>${esc(x.name)}</b><span>${x.cal||0} kcal · ${x.pro||0}g${logBtn} <span class="del" style="padding-left:6px" data-del>×</span></span>`;
+    d.innerHTML=`<span style="flex:1"><b>${esc(x.name)}</b></span><span style="color:var(--muted);font-size:13px;white-space:nowrap;align-self:center">${x.cal||0} kcal · ${x.pro||0}g</span>${logBtn}<button class="del" data-del>×</button>`;
     if(selDietDay===todayIdx){
       d.querySelector('[data-log]').onclick=()=>{todayMeals().push({name:x.name,cal:x.cal,pro:x.pro});save();render();};
     }
@@ -561,7 +588,7 @@ function renderDiet(){
   if(!m.length){l.innerHTML='<div class="empty">No meals logged today.</div>';return;}
   m.forEach((x,idx)=>{
     const d=document.createElement('div');d.className='meal';
-    d.innerHTML=`<b>${esc(x.name)}</b><span>${x.cal||0} kcal · ${x.pro||0}g <span class="del" style="padding-left:8px">×</span></span>`;
+    d.innerHTML=`<span style="flex:1"><b>${esc(x.name)}</b></span><span style="color:var(--muted);font-size:13px;white-space:nowrap;align-self:center">${x.cal||0} kcal · ${x.pro||0}g</span><button class="del">×</button>`;
     d.querySelector('.del').onclick=function(){delConfirm(this,()=>{m.splice(idx,1);save();render();});};
     l.appendChild(d);
   });
@@ -677,7 +704,7 @@ function renderMoney(){
   else{
     S.weeklyAlloc.forEach((x,idx)=>{
       const d=document.createElement('div');d.className='row';
-      d.innerHTML=`<div class="label">${esc(x.name)}</div><div class="right">$${fmt(x.amt)}<small> /wk</small></div><div class="del">×</div>`;
+      d.innerHTML=`<div class="label">${esc(x.name)}</div><div class="right">$${fmt(x.amt)}<small> /wk</small></div><button class="del">×</button>`;
       d.querySelector('.del').onclick=function(){delConfirm(this,()=>{S.weeklyAlloc.splice(idx,1);save();render();});};
       wl.appendChild(d);
     });
@@ -695,7 +722,7 @@ function renderMoney(){
     S.monthlyExp.forEach((x,idx)=>{
       const isRec=x.recurring!==false;
       const d=document.createElement('div');d.className='row';
-      d.innerHTML=`<div class="label">${esc(x.name)}</div><div class="right" style="display:flex;align-items:center;gap:6px"><span class="badge" style="font-size:10px;padding:2px 6px;border-radius:8px;cursor:pointer;background:${isRec?'var(--accent)':'var(--surface2)'};color:${isRec?'#000':'var(--muted)'}">${isRec?'↻ recurring':'once'}</span>$${fmt(x.amt)}</div><div class="del">×</div>`;
+      d.innerHTML=`<div class="label">${esc(x.name)}</div><div class="right" style="display:flex;align-items:center;gap:6px"><span class="badge" style="font-size:10px;padding:2px 8px;border-radius:8px;cursor:pointer;min-height:28px;display:inline-flex;align-items:center;background:${isRec?'var(--accent)':'var(--surface2)'};color:${isRec?'#000':'var(--muted)'}">${isRec?'↻ recurring':'once'}</span>$${fmt(x.amt)}</div><button class="del">×</button>`;
       d.querySelector('.badge').onclick=()=>{x.recurring=!isRec;save();renderMoney();};
       d.querySelector('.del').onclick=function(){delConfirm(this,()=>{S.monthlyExp.splice(idx,1);save();render();});};
       el.appendChild(d);
@@ -746,7 +773,7 @@ function renderTrain(){
     else entries.forEach((e,idx)=>{
       const d=document.createElement('div');d.className='row';
       const detail=[e.sets&&`${e.sets} sets`,e.reps&&`${e.reps} reps`,e.weight&&`${e.weight} lbs`].filter(Boolean).join(' · ');
-      d.innerHTML=`<div class="label" style="flex:1">${esc(e.name)}${detail?`<div class="task-time">${detail}</div>`:''}</div><div class="edit-ic">✎</div><div class="del">×</div>`;
+      d.innerHTML=`<div class="label" style="flex:1">${esc(e.name)}${detail?`<div class="task-time">${detail}</div>`:''}</div><button class="edit-ic">✎</button><button class="del">×</button>`;
       d.querySelector('.edit-ic').onclick=()=>{
         d.className='row editing';
         d.innerHTML=`<div style="flex:1;display:flex;flex-direction:column;gap:6px"><input class="wi-name" value="${esc(e.name)}" placeholder="Exercise" style="margin:0"><div style="display:flex;gap:6px"><input class="wi-sets" type="number" inputmode="numeric" value="${e.sets||''}" placeholder="Sets" style="flex:1;margin:0"><input class="wi-reps" type="number" inputmode="numeric" value="${e.reps||''}" placeholder="Reps" style="flex:1;margin:0"><input class="wi-weight" type="number" inputmode="decimal" value="${e.weight||''}" placeholder="lbs" style="flex:1;margin:0"></div></div><button class="btn" style="padding:0 14px;min-height:44px;align-self:flex-end">Save</button><button class="btn ghost" style="padding:0 12px;min-height:44px;align-self:flex-end">✕</button>`;
@@ -791,7 +818,7 @@ function renderTrain(){
       const deltaStr=delta!==null&&delta!==0?` ${delta>0?'↑':'↓'}${Math.abs(delta)}`:'';
       const deltaColor=delta!==null?(delta<0?'var(--good)':'#e07070'):'var(--muted)';
       const row=document.createElement('div');row.className='row';
-      row.innerHTML=`<div class="label" style="flex:1"><span style="font-weight:600">${entry.val} lbs</span> <span style="color:var(--muted);font-size:12px">${label}</span>${deltaStr?`<span style="font-size:12px;color:${deltaColor};margin-left:4px">${deltaStr}</span>`:''}</div><div class="del">×</div>`;
+      row.innerHTML=`<div class="label" style="flex:1"><span style="font-weight:600">${entry.val} lbs</span> <span style="color:var(--muted);font-size:12px">${label}</span>${deltaStr?`<span style="font-size:12px;color:${deltaColor};margin-left:4px">${deltaStr}</span>`:''}</div><button class="del">×</button>`;
       row.querySelector('.del').onclick=function(){delConfirm(this,()=>{S.weightLog.splice(realIdx,1);save();renderTrain();});};
       bwList.appendChild(row);
     });
@@ -962,7 +989,101 @@ function renderHome(){
   else next.forEach(t=>{const d=document.createElement('div');d.className='row';d.innerHTML=`<div class="check"></div><div class="label">${esc(t.t)}${t.time?`<div class="task-time">${esc(t.time)}</div>`:''}</div>`;
     d.querySelector('.check').onclick=()=>{(S.done[todayKey]||(S.done[todayKey]={}))[t.id]=true;save();render()};
     ht.appendChild(d);});
+  const pendingTodos=(S.todos||[]).filter(t=>!t.done).length;
+  if(pendingTodos>0){const sep=document.createElement('div');sep.style.cssText='margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px';sep.innerHTML=`<span style="font-size:15px">□</span><span>${pendingTodos} to-do${pendingTodos!==1?'s':''} pending</span>`;sep.onclick=()=>nav('notes');ht.appendChild(sep);}
+  renderGoals();
   renderStreaks();
+}
+
+/* ---------- GOALS ---------- */
+let goalType='long';
+function setGoalType(t){
+  goalType=t;
+  const btnL=document.getElementById('goal-type-long'),btnN=document.getElementById('goal-type-short');
+  if(btnL&&btnN){btnL.style.background=t==='long'?'var(--accent)':'var(--surface2)';btnL.style.color=t==='long'?'#1a1206':'var(--muted)';btnN.style.background=t==='short'?'var(--accent)':'var(--surface2)';btnN.style.color=t==='short'?'#1a1206':'var(--muted)';}
+}
+function addGoal(){
+  const i=document.getElementById('goal-inp');const v=i.value.trim();if(!v)return;
+  if(!S.goalsLong)S.goalsLong=[];if(!S.goalsShort)S.goalsShort=[];
+  (goalType==='long'?S.goalsLong:S.goalsShort).push({id:uid(),t:v});
+  i.value='';save();renderGoals();
+}
+function deleteGoal(type,id){
+  if(type==='long')S.goalsLong=(S.goalsLong||[]).filter(g=>g.id!==id);
+  else S.goalsShort=(S.goalsShort||[]).filter(g=>g.id!==id);
+  save();renderGoals();
+}
+function achieveGoal(id){
+  S.goalsShort=(S.goalsShort||[]).filter(g=>g.id!==id);
+  save();toast('Goal achieved — keep building ✓');renderGoals();
+}
+function renderGoals(){
+  if(!S.goalsLong)S.goalsLong=[];if(!S.goalsShort)S.goalsShort=[];
+  const longEl=document.getElementById('g-long-list'),shortEl=document.getElementById('g-short-list');
+  if(!longEl||!shortEl)return;
+  function renderGoalList(arr,el,type){
+    el.innerHTML='';
+    if(!arr.length){el.innerHTML=`<div class="empty" style="padding:6px 0;text-align:left;font-style:italic">${type==='long'?'Your long-term vision goes here.':'Your near-term targets go here.'}</div>`;return;}
+    arr.forEach(g=>{
+      const d=document.createElement('div');
+      d.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)';
+      const icon=document.createElement('span');icon.textContent=type==='long'?'◇':'→';
+      icon.style.cssText=`color:${type==='long'?'var(--accent)':'var(--good)'};font-size:16px;flex-shrink:0`;
+      const label=document.createElement('span');label.textContent=g.t;
+      label.style.cssText='flex:1;font-size:15px;line-height:1.4;'+(type==='long'?'font-style:italic;':'');
+      const btnWrap=document.createElement('div');btnWrap.style.cssText='display:flex;gap:4px;flex-shrink:0';
+      if(type==='short'){
+        const ach=document.createElement('button');ach.textContent='✓';
+        ach.style.cssText='background:none;border:1px solid var(--good);color:var(--good);border-radius:8px;font-size:13px;min-height:44px;min-width:44px;cursor:pointer;';
+        ach.onclick=()=>achieveGoal(g.id);btnWrap.appendChild(ach);
+      }
+      const del=document.createElement('button');del.className='del';del.textContent='×';
+      del.onclick=function(){delConfirm(this,()=>deleteGoal(type,g.id));};
+      btnWrap.appendChild(del);d.appendChild(icon);d.appendChild(label);d.appendChild(btnWrap);el.appendChild(d);
+    });
+  }
+  renderGoalList(S.goalsLong,longEl,'long');
+  renderGoalList(S.goalsShort,shortEl,'short');
+}
+
+/* ---------- TO-DO ---------- */
+function addTodo(){
+  const i=document.getElementById('todo-inp');const v=i.value.trim();if(!v)return;
+  if(!S.todos)S.todos=[];
+  S.todos.push({id:uid(),t:v,done:false});
+  i.value='';save();renderTodos();
+}
+function toggleTodo(id){
+  const item=(S.todos||[]).find(t=>t.id===id);if(item){item.done=!item.done;save();renderTodos();}
+}
+function deleteTodo(id){
+  S.todos=(S.todos||[]).filter(t=>t.id!==id);save();renderTodos();
+}
+function clearDoneTodos(){
+  S.todos=(S.todos||[]).filter(t=>!t.done);save();renderTodos();
+}
+function renderTodos(){
+  if(!S.todos)S.todos=[];
+  const el=document.getElementById('todosList');if(!el)return;
+  el.innerHTML='';
+  const active=S.todos.filter(t=>!t.done),done=S.todos.filter(t=>t.done);
+  if(!active.length&&!done.length){el.innerHTML='<div class="empty">Nothing here yet.</div>';return;}
+  [...active,...done].forEach(item=>{
+    const row=document.createElement('div');row.className='row'+(item.done?' done':'');
+    if(item.done)row.style.opacity='0.5';
+    const chk=document.createElement('div');chk.className='check'+(item.done?' on':'');
+    if(item.done)chk.textContent='✓';
+    chk.onclick=()=>toggleTodo(item.id);
+    const label=document.createElement('div');label.className='label';label.style.flex='1';label.textContent=item.t;
+    const del=document.createElement('button');del.className='del';del.textContent='×';
+    del.onclick=function(){delConfirm(this,()=>deleteTodo(item.id));};
+    row.appendChild(chk);row.appendChild(label);row.appendChild(del);el.appendChild(row);
+  });
+  if(done.length){
+    const btn=document.createElement('button');btn.className='btn ghost';
+    btn.style.cssText='width:100%;margin-top:10px;min-height:38px;font-size:13px';
+    btn.textContent='Clear '+done.length+' completed';btn.onclick=clearDoneTodos;el.appendChild(btn);
+  }
 }
 
 /* ---------- NOTES & JOURNAL ---------- */
@@ -1071,15 +1192,16 @@ function renderNotes(){
     if(!S.notes||!S.notes.length)nl.innerHTML='<div class="empty">No notes yet. Add one below.</div>';
     else{nl.innerHTML='';(S.notes||[]).forEach((n,idx)=>{
       const wrap=document.createElement('div');wrap.className='note-sep';
-      wrap.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:14px;font-weight:600;color:var(--accent)">${esc(n.title)}</span><span class="del">×</span></div><textarea style="min-height:100px" placeholder="Notes for ${esc(n.title)}…">${esc(n.body||'')}</textarea>`;
+      wrap.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:14px;font-weight:600;color:var(--accent)">${esc(n.title)}</span><button class="del">×</button></div><textarea style="min-height:100px" placeholder="Notes for ${esc(n.title)}…">${esc(n.body||'')}</textarea>`;
       wrap.querySelector('.del').onclick=function(){delConfirm(this,()=>{S.notes.splice(idx,1);save();renderNotes();});};
       const nta=wrap.querySelector('textarea');nta.oninput=()=>{n.body=nta.value;save();};
       nl.appendChild(wrap);});}
   }
   renderLibrary(S.routines||[],'routinesList');
   renderLibrary(S.recipes||[],'recipesList');
+  renderTodos();
   // Collapsible Notes sections
-  ['nc-journal','nc-past','nc-notes-refs','nc-routines-card','nc-recipes-card'].forEach(id=>{
+  ['nc-todos','nc-journal','nc-past','nc-notes-refs','nc-routines-card','nc-recipes-card'].forEach(id=>{
     const card=document.getElementById(id);if(!card)return;
     const h2=card.querySelector('h2');if(!h2)return;
     const isCol=notesCollapsed.has(id);
@@ -1144,10 +1266,11 @@ function esc(s){return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':
 function fmt(n){return (+n||0).toLocaleString(undefined,{maximumFractionDigits:2})}
 
 // enter-to-add on key inputs
-['newTask','newTaskTime','m-name','gl-new','gs-new','e-name','wa-name','p-name','we-name','note-title','routine-title','recipe-title','bw-val'].forEach(id=>{
+['newTask','newTaskTime','m-name','e-name','wa-name','p-name','we-name','note-title','routine-title','recipe-title','bw-val','goal-inp','todo-inp'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();
     if(id==='newTask'||id==='newTaskTime')addTask();
+    else if(id==='m-name')addMeal();
     else if(id==='e-name')addExpense();
     else if(id==='wa-name')addWeeklyAlloc();
     else if(id==='p-name')addPlannedMeal();
@@ -1155,7 +1278,9 @@ function fmt(n){return (+n||0).toLocaleString(undefined,{maximumFractionDigits:2
     else if(id==='note-title')addNote();
     else if(id==='routine-title')addRoutine();
     else if(id==='recipe-title')addRecipe();
-    else if(id==='bw-val')addBodyWeight();}});
+    else if(id==='bw-val')addBodyWeight();
+    else if(id==='goal-inp')addGoal();
+    else if(id==='todo-inp')addTodo();}});
 });
 
 setHeader();render();
