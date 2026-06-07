@@ -601,7 +601,7 @@ function setSavingsGoal(){const i=document.getElementById('sav-goal');S.savingsG
 function editMonthly(){
   const pill=document.getElementById('f-monthly-pill');
   const cur=S.monthlyIncome||'';
-  pill.innerHTML=`<input id="mon-inp" type="number" inputmode="decimal" style="background:none;border:none;border-bottom:1px solid var(--accent);color:var(--txt);font-family:var(--serif);font-size:20px;width:100%;text-align:center;padding:2px 0;outline:none" placeholder="amount" value="${cur}"><div class="t" style="margin-top:8px"><span style="color:var(--accent);padding:0 10px;cursor:pointer" onclick="saveMonthly()">✓ Save</span><span style="color:var(--muted);cursor:pointer" onclick="render()">✕</span></div>`;
+  pill.innerHTML=`<input id="mon-inp" type="number" inputmode="decimal" style="background:none;border:none;border-bottom:1px solid var(--accent);color:var(--txt);font-family:var(--serif);font-size:20px;width:100%;text-align:center;padding:2px 0;outline:none" placeholder="amount" value="${cur}"><div style="display:flex;gap:6px;margin-top:10px;justify-content:center"><button onclick="saveMonthly()" style="background:var(--accent);color:#1a1206;border:none;border-radius:10px;padding:0 18px;font-size:14px;font-weight:600;min-height:44px;cursor:pointer">Save</button><button onclick="render()" style="background:var(--surface2);color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:0 14px;font-size:14px;min-height:44px;cursor:pointer">✕</button></div>`;
   const inp=document.getElementById('mon-inp');inp.focus();inp.select();
   inp.addEventListener('keydown',e=>{if(e.key==='Enter')saveMonthly();else if(e.key==='Escape')render();});
 }
@@ -645,7 +645,8 @@ function renderMoney(){
 
   // Income card
   document.getElementById('f-weekly').textContent='$'+fmt(weekly);
-  if(document.getElementById('f-monthly'))document.getElementById('f-monthly').textContent='$'+fmt(monthly);
+  const mPill=document.getElementById('f-monthly-pill');
+  if(mPill)mPill.innerHTML=`<div class="n" id="f-monthly">$${fmt(monthly)}</div><div class="t">per month <span style="color:var(--accent);font-size:13px;cursor:pointer" onclick="editMonthly()">✎</span></div>`;
   const salEl=document.getElementById('sal-amt');
   if(salEl&&document.activeElement!==salEl)salEl.value=S.salary||'';
 
