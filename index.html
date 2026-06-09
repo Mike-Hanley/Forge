@@ -79,57 +79,28 @@
   .sec-btn{background:var(--surface2);color:var(--txt);border:1px solid var(--line);border-radius:11px;padding:0 18px;font-size:14px;font-weight:500;min-height:44px;white-space:nowrap;cursor:pointer;}
   @keyframes pop-check{0%,100%{transform:scale(1)}45%{transform:scale(1.22)}70%{transform:scale(.93)}}
   .check.popping{animation:pop-check .22s ease}
+  .meal-chip{display:inline-flex;align-items:center;background:var(--surface2);border:1px solid var(--line);border-radius:20px;padding:7px 13px;font-size:13px;cursor:pointer;white-space:nowrap;min-height:36px;transition:border-color .15s}
+  .meal-chip:active{border-color:var(--accent)}
+  .ob-sel{background:var(--accent)!important;color:#000!important;border-color:var(--accent)!important}
 </style>
 </head>
 <body>
 <header>
-  <h1 id="greeting">Forge</h1>
-  <div class="date" id="todayStr"></div>
-  <div id="sectionLabel" style="display:none;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent-dim);font-weight:600;margin-top:4px"></div>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <h1 id="greeting">Forge</h1>
+      <div class="date" id="todayStr"></div>
+      <div id="sectionLabel" style="display:none;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent-dim);font-weight:600;margin-top:4px"></div>
+    </div>
+    <button onclick="showBackup()" style="background:none;border:1px solid var(--line);color:var(--muted);border-radius:10px;font-size:17px;cursor:pointer;min-height:44px;min-width:44px;margin-top:2px;flex-shrink:0">⚙</button>
+  </div>
 </header>
 
 <!-- DASHBOARD -->
 <div class="view active" id="v-home">
   <div class="wrap">
     <div class="card">
-      <h2>Today's Progress</h2>
-      <div class="stat" style="cursor:pointer" onclick="nav('today')"><span>Routine</span><span class="v" id="h-routine">0/0</span></div>
-      <div class="bar"><i id="h-routine-bar" style="width:0"></i></div>
-      <div class="grid3">
-        <div class="pill" style="cursor:pointer" onclick="nav('diet')"><div class="n" id="h-cal">0</div><div class="t">kcal</div></div>
-        <div class="pill" style="cursor:pointer" onclick="nav('diet')"><div class="n" id="h-pro">0</div><div class="t">protein g</div></div>
-        <div class="pill" id="h-workout-pill" style="cursor:pointer" onclick="nav('train')"><div class="n" id="h-workout">—</div><div class="t">workout</div></div>
-      </div>
-    </div>
-
-    <!-- Goals / Manifestation -->
-    <div class="card">
-      <h2>My Goals</h2>
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-bottom:8px">Long Term Vision</div>
-      <div id="g-long-list"></div>
-      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-top:16px;margin-bottom:8px">Near Term</div>
-      <div id="g-short-list"></div>
-      <div style="display:flex;gap:8px;margin-top:16px;align-items:center">
-        <input id="goal-inp" placeholder="Write a goal…" style="flex:1" enterkeyhint="done">
-        <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;flex-shrink:0">
-          <button id="goal-type-long" onclick="setGoalType('long')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--accent);color:#1a1206;border:none;font-weight:600;cursor:pointer">Long</button>
-          <button id="goal-type-short" onclick="setGoalType('short')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--surface2);color:var(--muted);border:none;border-left:1px solid var(--line);cursor:pointer">Near</button>
-        </div>
-        <button class="btn" onclick="addGoal()" style="padding:0 16px">Add</button>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>Money Snapshot</h2>
-      <div class="grid2" style="margin-bottom:12px">
-        <div class="pill" style="cursor:pointer" onclick="nav('money')"><div class="n" id="h-weekly">$0</div><div class="t">per week</div></div>
-        <div class="pill" style="cursor:pointer" onclick="nav('money')"><div class="n" id="h-savings">$0</div><div class="t">savings</div></div>
-      </div>
-      <div class="stat" style="cursor:pointer" onclick="nav('money')"><span>Monthly expenses</span><span class="v" id="h-mexp">$0</span></div>
-      <div class="bar"><i id="h-money-bar" style="width:0"></i></div>
-    </div>
-    <div class="card">
-      <h2>Next Up</h2>
+      <h2>Today</h2>
       <div id="h-tasks"></div>
     </div>
     <div class="card">
@@ -164,11 +135,40 @@
       </div>
     </div>
     <div class="card">
-      <h2>Data Backup</h2>
-      <div style="color:var(--muted);font-size:13px;margin-bottom:12px">Export to back up or move to another device. Import to restore.</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn ghost" style="flex:1" onclick="showExport()">Export</button>
-        <button class="btn ghost" style="flex:1" onclick="showImport()">Import</button>
+      <h2>Today's Progress</h2>
+      <div class="stat" style="cursor:pointer" onclick="nav('today')"><span>Routine</span><span class="v" id="h-routine">0/0</span></div>
+      <div class="bar"><i id="h-routine-bar" style="width:0"></i></div>
+      <div class="grid3">
+        <div class="pill" style="cursor:pointer" onclick="nav('diet')"><div class="n" id="h-cal">0</div><div class="t">kcal</div></div>
+        <div class="pill" style="cursor:pointer" onclick="nav('diet')"><div class="n" id="h-pro">0</div><div class="t">protein g</div></div>
+        <div class="pill" id="h-workout-pill" style="cursor:pointer" onclick="nav('train')"><div class="n" id="h-workout">—</div><div class="t">workout</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Money Snapshot</h2>
+      <div class="grid2" style="margin-bottom:12px">
+        <div class="pill" style="cursor:pointer" onclick="nav('money')"><div class="n" id="h-weekly">$0</div><div class="t">per week</div></div>
+        <div class="pill" style="cursor:pointer" onclick="nav('money')"><div class="n" id="h-savings">$0</div><div class="t">savings</div></div>
+      </div>
+      <div class="stat" style="cursor:pointer" onclick="nav('money')"><span>Monthly expenses</span><span class="v" id="h-mexp">$0</span></div>
+      <div class="bar"><i id="h-money-bar" style="width:0"></i></div>
+    </div>
+
+    <!-- Goals / Manifestation -->
+    <div class="card">
+      <h2>My Goals</h2>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-bottom:8px">Long Term Vision</div>
+      <div id="g-long-list"></div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:600;margin-top:16px;margin-bottom:8px">Near Term</div>
+      <div id="g-short-list"></div>
+      <div style="display:flex;gap:8px;margin-top:16px;align-items:center">
+        <input id="goal-inp" placeholder="Write a goal…" style="flex:1" enterkeyhint="done">
+        <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;flex-shrink:0">
+          <button id="goal-type-long" onclick="setGoalType('long')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--accent);color:#1a1206;border:none;font-weight:600;cursor:pointer">Long</button>
+          <button id="goal-type-short" onclick="setGoalType('short')" style="font-size:12px;min-height:44px;padding:0 12px;background:var(--surface2);color:var(--muted);border:none;border-left:1px solid var(--line);cursor:pointer">Near</button>
+        </div>
+        <button class="btn" onclick="addGoal()" style="padding:0 16px">Add</button>
       </div>
     </div>
   </div>
@@ -195,7 +195,11 @@
         <input id="newTask" placeholder="Add a task or habit…" enterkeyhint="next">
         <div style="display:flex;gap:8px">
           <input id="newTaskTime" placeholder="Time (e.g. 9:00 AM)" style="flex:1">
-          <button class="btn" onclick="addTask()">Add</button>
+          <div style="display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;flex-shrink:0">
+            <button id="task-day-btn" onclick="setTaskRepeat(false)" style="font-size:11px;min-height:44px;padding:0 9px;background:var(--accent);color:#1a1206;border:none;font-weight:600;cursor:pointer;white-space:nowrap">This day</button>
+            <button id="task-all-btn" onclick="setTaskRepeat(true)" style="font-size:11px;min-height:44px;padding:0 9px;background:var(--surface2);color:var(--muted);border:none;border-left:1px solid var(--line);cursor:pointer;white-space:nowrap">Every day</button>
+          </div>
+          <button class="btn" onclick="addTask()" style="padding:0 14px">Add</button>
         </div>
       </div>
     </div>
@@ -208,7 +212,7 @@
     <div class="day-tabs" id="dietDayTabs"></div>
 
     <!-- Meal plan for any selected day -->
-    <div class="card">
+    <div class="card" id="dietPlanCard">
       <h2 id="planTitle">Meal Plan</h2>
       <div style="font-size:12px;color:var(--muted);margin:-6px 0 10px">Weekly template — not today's log</div>
       <div id="planList"></div>
@@ -226,6 +230,7 @@
     <div id="todayLogSection">
       <div class="card">
         <h2>Today's Intake</h2>
+        <div id="d-intake-subtitle" style="font-size:12px;color:var(--muted);margin:-8px 0 10px;display:none"></div>
         <div class="stat"><span>Calories</span><span class="v" id="d-cal">0 <small>kcal</small></span></div>
         <div class="bar"><i id="d-cal-bar" style="width:0"></i></div>
         <div class="stat"><span>Protein</span><span class="v" id="d-pro">0 <small>g</small></span></div>
@@ -242,6 +247,7 @@
       </div>
       <div class="card">
         <h2>Log a Meal</h2>
+        <div id="recentMeals" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px"></div>
         <input id="m-name" placeholder="Meal / food" style="margin-bottom:8px" enterkeyhint="next">
         <div class="grid2" style="margin-bottom:8px">
           <input id="m-cal" type="number" inputmode="numeric" placeholder="Calories">
@@ -261,7 +267,56 @@
 <div class="view" id="v-money">
   <div class="wrap">
 
-    <!-- Income -->
+    <!-- Monthly Overview — hero card, most important number first -->
+    <div class="card">
+      <h2>Monthly Overview</h2>
+      <div class="stat"><span>Base income</span><span class="v" id="ov-income">$0</span></div>
+      <div class="stat" id="ov-tips-row" style="display:none"><span>Tips this month</span><span class="v" id="ov-tips" style="color:var(--good)">$0</span></div>
+      <div class="stat"><span>Expenses</span><span class="v" id="ov-exp">$0</span></div>
+      <div class="bar" style="margin-top:4px"><i id="ov-bar" style="width:0"></i></div>
+      <div class="stat" style="margin-top:6px"><span>Net</span><span class="v" id="ov-net">$0</span></div>
+      <div id="ov-net-delta" style="text-align:right;font-size:12px;color:var(--muted);margin-top:-2px;padding-right:2px;display:none"></div>
+    </div>
+
+    <!-- Savings -->
+    <div class="card">
+      <h2>Total Savings</h2>
+      <div class="stat"><span>Balance</span><span class="v" id="f-savings">$0</span></div>
+      <div id="f-savings-goal-wrap" style="display:none">
+        <div class="stat" style="margin-top:2px"><span id="f-savings-goal-label">Goal</span><span class="v" id="f-savings-goal-pct" style="font-size:18px">0%</span></div>
+        <div class="bar"><i id="f-savings-goal-bar" class="green" style="width:0"></i></div>
+        <div id="f-savings-eta" style="font-size:12px;color:var(--muted);margin-top:6px"></div>
+      </div>
+      <div class="miniadd" style="margin-top:10px">
+        <input id="sav-amt" inputmode="decimal" placeholder="Set balance, or +500 / -200">
+        <button class="btn" onclick="setSavings()">Update</button>
+      </div>
+      <div class="miniadd" style="margin-top:8px">
+        <input id="sav-goal" type="number" inputmode="decimal" placeholder="Savings goal $">
+        <button class="btn ghost" onclick="setSavingsGoal()">Set Goal</button>
+      </div>
+    </div>
+
+    <!-- Tips & Variable Income — logged frequently -->
+    <div class="card">
+      <h2>Tips &amp; Variable Income</h2>
+      <div class="grid2" style="margin-bottom:12px">
+        <div class="pill"><div class="n" id="tip-week">$0</div><div class="t">this week</div></div>
+        <div class="pill"><div class="n" id="tip-month">$0</div><div class="t">this month</div></div>
+      </div>
+      <div id="tipList"></div>
+      <div style="display:flex;gap:8px;margin-top:14px;align-items:center">
+        <input id="tip-amt" type="number" inputmode="decimal" placeholder="Amount $" style="flex:1">
+        <input id="tip-date" type="date" style="flex:1;font-size:14px;padding:13px 10px">
+        <button class="btn" onclick="addTip()" style="padding:0 14px">Log</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
+        <span style="font-size:13px;color:var(--muted)">Count in Monthly Overview</span>
+        <button id="tip-inc-btn" onclick="toggleTipsInIncome()" style="font-size:12px;min-height:36px;padding:0 14px;border-radius:10px;border:none;cursor:pointer;">On</button>
+      </div>
+    </div>
+
+    <!-- Income — set once, reference occasionally -->
     <div class="card">
       <h2>Income</h2>
       <div class="miniadd">
@@ -281,43 +336,6 @@
       <div class="grid2" style="margin-top:14px">
         <div class="pill"><div class="n" id="f-weekly">$0</div><div class="t" id="f-weekly-label">per week</div></div>
         <div class="pill" id="f-monthly-pill"><div class="n" id="f-monthly">$0</div><div class="t">per month <span style="color:var(--accent);font-size:13px;cursor:pointer" onclick="editMonthly()">✎</span></div></div>
-      </div>
-    </div>
-
-    <!-- Tips & Variable Income -->
-    <div class="card">
-      <h2>Tips &amp; Variable Income</h2>
-      <div class="grid2" style="margin-bottom:12px">
-        <div class="pill"><div class="n" id="tip-week">$0</div><div class="t">this week</div></div>
-        <div class="pill"><div class="n" id="tip-month">$0</div><div class="t">this month</div></div>
-      </div>
-      <div id="tipList"></div>
-      <div style="display:flex;gap:8px;margin-top:14px;align-items:center">
-        <input id="tip-amt" type="number" inputmode="decimal" placeholder="Amount $" style="flex:1">
-        <input id="tip-date" type="date" style="flex:1;font-size:14px;padding:13px 10px">
-        <button class="btn" onclick="addTip()" style="padding:0 14px">Log</button>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line)">
-        <span style="font-size:13px;color:var(--muted)">Count in Monthly Overview</span>
-        <button id="tip-inc-btn" onclick="toggleTipsInIncome()" style="font-size:12px;min-height:36px;padding:0 14px;border-radius:10px;border:none;cursor:pointer;">On</button>
-      </div>
-    </div>
-
-    <!-- Savings -->
-    <div class="card">
-      <h2>Total Savings</h2>
-      <div class="stat"><span>Balance</span><span class="v" id="f-savings">$0</span></div>
-      <div id="f-savings-goal-wrap" style="display:none">
-        <div class="stat" style="margin-top:2px"><span id="f-savings-goal-label">Goal</span><span class="v" id="f-savings-goal-pct" style="font-size:18px">0%</span></div>
-        <div class="bar"><i id="f-savings-goal-bar" class="green" style="width:0"></i></div>
-      </div>
-      <div class="miniadd" style="margin-top:10px">
-        <input id="sav-amt" inputmode="decimal" placeholder="Set balance, or +500 / -200">
-        <button class="btn" onclick="setSavings()">Update</button>
-      </div>
-      <div class="miniadd" style="margin-top:8px">
-        <input id="sav-goal" type="number" inputmode="decimal" placeholder="Savings goal $">
-        <button class="btn ghost" onclick="setSavingsGoal()">Set Goal</button>
       </div>
     </div>
 
@@ -353,16 +371,6 @@
       </div>
     </div>
 
-    <!-- Monthly Overview -->
-    <div class="card">
-      <h2>Monthly Overview</h2>
-      <div class="stat"><span>Base income</span><span class="v" id="ov-income">$0</span></div>
-      <div class="stat" id="ov-tips-row" style="display:none"><span>Tips this month</span><span class="v" id="ov-tips" style="color:var(--good)">$0</span></div>
-      <div class="stat"><span>Expenses</span><span class="v" id="ov-exp">$0</span></div>
-      <div class="bar" style="margin-top:4px"><i id="ov-bar" style="width:0"></i></div>
-      <div class="stat" style="margin-top:6px"><span>Net</span><span class="v" id="ov-net">$0</span></div>
-    </div>
-
   </div>
 </div>
 
@@ -374,10 +382,24 @@
       <div id="workoutPlan"></div>
     </div>
     <div class="card">
+      <h2>Body Weight</h2>
+      <div id="bw-sparkline" style="margin-bottom:10px"></div>
+      <div id="bwList"></div>
+      <div class="miniadd" style="margin-top:12px">
+        <input id="bw-val" type="number" inputmode="decimal" placeholder="Weight (lbs)">
+        <button class="btn" onclick="addBodyWeight()">Log</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <input id="bw-target" type="number" inputmode="decimal" placeholder="Target weight (lbs)" style="font-size:13px">
+        <button class="btn ghost" onclick="setWeightTarget()" style="font-size:12px;padding:0 12px;min-height:36px;white-space:nowrap">Set target</button>
+      </div>
+    </div>
+    <div class="card">
       <h2 id="wlog-title">Log Today's Workout</h2>
       <div id="wlogToday"></div>
       <div class="addbar" style="flex-direction:column;gap:8px;margin-top:14px">
         <input id="we-name" placeholder="Exercise (Bench press, Squat…)" enterkeyhint="next">
+        <div id="we-hint" style="font-size:12px;color:var(--accent-dim);min-height:16px;margin:-4px 0 2px;padding-left:2px"></div>
         <div style="display:flex;gap:6px">
           <input id="we-sets" type="number" inputmode="numeric" placeholder="Sets" style="flex:1">
           <input id="we-reps" type="number" inputmode="numeric" placeholder="Reps" style="flex:1">
@@ -389,15 +411,6 @@
     <div class="card">
       <h2>Workout History</h2>
       <div id="wlogHistory"></div>
-    </div>
-    <div class="card">
-      <h2>Body Weight</h2>
-      <div id="bw-sparkline" style="margin-bottom:10px"></div>
-      <div id="bwList"></div>
-      <div class="miniadd" style="margin-top:12px">
-        <input id="bw-val" type="number" inputmode="decimal" placeholder="Weight (lbs)">
-        <button class="btn" onclick="addBodyWeight()">Log</button>
-      </div>
     </div>
     <div class="card" id="tc-routines-card">
       <h2>Workout Routines</h2>
@@ -470,6 +483,7 @@ const todayIdx=new Date().getDay();
 const todayKey=localDateKey();
 let selDay=todayIdx;
 let selDietDay=todayIdx;
+let taskAllDays=false;
 
 const blank=()=>({
   tasks:{0:[],1:[],2:[],3:[],4:[],5:[],6:[]},     // per-weekday task templates [{t,id}]
@@ -497,8 +511,11 @@ const blank=()=>({
   todos:[],                                         // [{id,t,done}]
   tips:[],                                          // [{id,date,amt}]
   tipsInIncome:true,                                // whether tips fold into Monthly Overview
+  weightTarget:0,                                    // target body weight (lbs)
   notesCollapsed:[],                                // persisted collapse state for Notes tab
-  trainCollapsed:[]                                 // persisted collapse state for Train tab
+  trainCollapsed:[],                                // persisted collapse state for Train tab
+  lastTab:'home',                                   // last active tab — restored on open
+  onboardingDone:false                              // first-open setup wizard flag
 });
 let S=load();
 let notesCollapsed=new Set(S.notesCollapsed||[]);
@@ -517,6 +534,7 @@ function nav(v){
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('sel',b.dataset.v===v));
   const sl=document.getElementById('sectionLabel');
   if(sl){const name=SECTION_NAMES[v]||'';sl.textContent=name;sl.style.display=name?'':'none';}
+  S.lastTab=v;save();
   window.scrollTo(0,0); render();
 }
 
@@ -546,6 +564,7 @@ function dayDoneMap(i){ // done map only meaningful for today; templates carry o
 }
 function renderRoutine(){
   buildDayTabs();
+  setTaskRepeat(taskAllDays);
   document.getElementById('routineTitle').textContent=FULL[selDay]+(selDay===todayIdx?" — Today":"");
   const list=document.getElementById('taskList');list.innerHTML='';
   const tasks=S.tasks[selDay];
@@ -577,10 +596,23 @@ function renderRoutine(){
     list.appendChild(row);
   });
 }
+function setTaskRepeat(allDays){
+  taskAllDays=allDays;
+  const dayBtn=document.getElementById('task-day-btn');
+  const allBtn=document.getElementById('task-all-btn');
+  if(dayBtn){dayBtn.style.background=allDays?'var(--surface2)':'var(--accent)';dayBtn.style.color=allDays?'var(--muted)':'#1a1206';}
+  if(allBtn){allBtn.style.background=allDays?'var(--accent)':'var(--surface2)';allBtn.style.color=allDays?'#1a1206':'var(--muted)';}
+}
 function addTask(){
   const i=document.getElementById('newTask');const ti=document.getElementById('newTaskTime');
   const v=i.value.trim();if(!v)return;
-  S.tasks[selDay].push({t:v,id:uid(),time:ti.value.trim()});
+  const time=ti.value.trim();
+  if(taskAllDays){
+    [0,1,2,3,4,5,6].forEach(d=>S.tasks[d].push({t:v,id:uid(),time}));
+    toast('Added to every day');
+  }else{
+    S.tasks[selDay].push({t:v,id:uid(),time});
+  }
   i.value='';ti.value='';save();render();
 }
 function moveTask(idx,dir){
@@ -608,6 +640,30 @@ function buildDietDayTabs(){
 
 function renderDiet(){
   buildDietDayTabs();
+  // Context-aware card order: today = log first, other day = plan first
+  const dietWrap=document.querySelector('#v-diet .wrap');
+  const planCard=document.getElementById('dietPlanCard');
+  const logSection=document.getElementById('todayLogSection');
+  // Section labels — remove old ones before re-inserting
+  dietWrap&&dietWrap.querySelectorAll('.diet-section-label').forEach(el=>el.remove());
+  if(dietWrap&&planCard&&logSection){
+    if(selDietDay===todayIdx){
+      dietWrap.insertBefore(logSection,planCard);
+      // inject labels
+      const logLabel=document.createElement('div');
+      logLabel.className='diet-section-label';
+      logLabel.style.cssText='font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);font-weight:600;padding:4px 2px 0;margin-bottom:-6px';
+      logLabel.textContent="Today's Log";
+      dietWrap.insertBefore(logLabel,logSection);
+      const planLabel=document.createElement('div');
+      planLabel.className='diet-section-label';
+      planLabel.style.cssText='font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:600;padding:4px 2px 0;margin-bottom:-6px';
+      planLabel.textContent='Weekly Plan';
+      dietWrap.insertBefore(planLabel,planCard);
+    }else{
+      dietWrap.insertBefore(planCard,logSection);
+    }
+  }
   document.getElementById('planTitle').textContent='Meal Plan — '+FULL[selDietDay]+(selDietDay===todayIdx?' (Today)':'');
 
   // Render planned meals for selected weekday
@@ -641,6 +697,28 @@ function renderDiet(){
   logSec.style.display=selDietDay===todayIdx?'':'none';
   if(selDietDay!==todayIdx)return;
 
+  // Recent meals quick-add chips
+  const rmEl=document.getElementById('recentMeals');
+  if(rmEl){
+    rmEl.innerHTML='';
+    const allLogged=Object.values(S.meals||{}).flat();
+    const seen=new Map();
+    // Walk newest-first to capture most recent cal/pro for each name
+    [...allLogged].reverse().forEach(x=>{
+      const key=(x.name||'').toLowerCase().trim();
+      if(key&&!seen.has(key))seen.set(key,x);
+    });
+    const unique=[...seen.values()].slice(0,9);
+    if(unique.length){
+      unique.forEach(x=>{
+        const chip=document.createElement('button');chip.className='meal-chip';
+        chip.textContent=x.name+(x.cal?'  '+x.cal+'kcal':'');
+        chip.onclick=()=>{todayMeals().push({name:x.name,cal:x.cal,pro:x.pro});save();render();toast(x.name+' logged');};
+        rmEl.appendChild(chip);
+      });
+    }
+  }
+
   const m=todayMeals();
   const cal=m.reduce((a,x)=>a+(+x.cal||0),0);
   const pro=m.reduce((a,x)=>a+(+x.pro||0),0);
@@ -659,6 +737,15 @@ function renderDiet(){
   if(tpEl&&document.activeElement!==tpEl)tpEl.value=tPro||'';
   const hintEl=document.getElementById('diet-target-hint');
   if(hintEl)hintEl.style.display=(!tCal&&!tPro)?'':'none';
+  const subEl=document.getElementById('d-intake-subtitle');
+  if(subEl){
+    if(tCal&&cal>0){
+      const pct=Math.round(cal/tCal*100);
+      const color=pct>=100?'#e07070':pct>=80?'var(--good)':'var(--accent)';
+      subEl.innerHTML=`<span style="color:${color};font-weight:600">${pct}%</span> of ${tCal} kcal target`;
+      subEl.style.display='';
+    }else{subEl.style.display='none';}
+  }
   const l=document.getElementById('mealList');l.innerHTML='';
   if(!m.length){l.innerHTML='<div class="empty">No meals logged today.</div>';return;}
   m.forEach((x,idx)=>{
@@ -781,6 +868,19 @@ function renderMoney(){
     document.getElementById('f-savings-goal-label').textContent='Goal: $'+fmt(goal);
     document.getElementById('f-savings-goal-pct').textContent=Math.round(pct)+'%';
     document.getElementById('f-savings-goal-bar').style.width=pct+'%';
+    const etaEl=document.getElementById('f-savings-eta');
+    if(etaEl){
+      const remaining=goal-(S.savings||0);
+      const totalExp=(S.monthlyExp||[]).reduce((a,x)=>a+(+x.amt||0),0);
+      const surplus=monthly-totalExp;
+      if(remaining<=0){etaEl.textContent='Goal reached!';}
+      else if(surplus>0){
+        const months=Math.ceil(remaining/surplus);
+        const yrs=Math.floor(months/12),mos=months%12;
+        const eta=yrs>0?(yrs+'y '+(mos>0?mos+'mo ':'')):(mos+'mo');
+        etaEl.textContent='At your current surplus, ~'+eta+' to reach your goal';
+      }else{etaEl.textContent=surplus<=0?'Increase surplus to project a timeline':'';}
+    }
   }else{
     goalWrap.style.display='none';
   }
@@ -844,6 +944,25 @@ function renderMoney(){
   document.getElementById('ov-bar').style.width=(totalIncome?Math.min(100,totalExp/totalIncome*100):0)+'%';
   document.getElementById('ov-bar').style.background=over?'#e05555':'var(--accent)';
   document.getElementById('ov-net').innerHTML=`<span style="font-family:var(--serif);font-size:32px;color:${over?'#e05555':'var(--good)'}">${over?'-':'+'} $${fmt(Math.abs(net))}</span>`;
+  // Monthly net delta vs last month
+  const ndEl=document.getElementById('ov-net-delta');
+  if(ndEl){
+    const now2=new Date();
+    const lastM=new Date(now2.getFullYear(),now2.getMonth()-1,1);
+    const lastMonthKey=lastM.getFullYear()+'-'+String(lastM.getMonth()+1).padStart(2,'0');
+    const hasTipsHistory=(S.tips||[]).some(t=>t.date&&t.date.startsWith(lastMonthKey));
+    if(includeTips&&hasTipsHistory){
+      const tipsLastMonth=(S.tips||[]).filter(t=>t.date&&t.date.startsWith(lastMonthKey)).reduce((a,t)=>a+(+t.amt||0),0);
+      const netLastMonth=monthly+(includeTips?tipsLastMonth:0)-totalExp;
+      const delta=net-netLastMonth;
+      const sign=delta>0?'↑':delta<0?'↓':'=';
+      const color=delta>0?'var(--good)':delta<0?'#e07070':'var(--muted)';
+      const mLabel=lastM.toLocaleDateString(undefined,{month:'short'});
+      ndEl.textContent=sign+' $'+fmt(Math.abs(delta))+' vs '+mLabel;
+      ndEl.style.color=color;
+      ndEl.style.display='';
+    }else{ndEl.style.display='none';}
+  }
 }
 
 /* ---------- TIPS ---------- */
@@ -875,7 +994,8 @@ function renderTips(){
   const listEl=document.getElementById('tipList');
   if(listEl){
     listEl.innerHTML='';
-    const recent=(S.tips).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+    const allSorted=(S.tips).slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const recent=showAllTips?allSorted:allSorted.slice(0,8);
     if(!recent.length){listEl.innerHTML='<div class="empty">No tips logged yet.</div>';}
     else recent.forEach(t=>{
       const d=new Date(t.date+'T12:00:00');
@@ -885,7 +1005,7 @@ function renderTips(){
       row.querySelector('.del').onclick=function(){delConfirm(this,()=>deleteTip(t.id));};
       listEl.appendChild(row);
     });
-    if(S.tips.length>8){const more=document.createElement('div');more.className='empty';more.style.paddingTop='6px';more.textContent='+'+(S.tips.length-8)+' older entries';listEl.appendChild(more);}
+    if(allSorted.length>8){const btn=document.createElement('button');btn.className='sec-btn';btn.style.cssText='width:100%;margin-top:8px';btn.textContent=showAllTips?'Show less':'Show all '+allSorted.length+' entries';btn.onclick=()=>{showAllTips=!showAllTips;renderTips();};listEl.appendChild(btn);}
   }
   const btn=document.getElementById('tip-inc-btn');
   if(btn){
@@ -1026,10 +1146,14 @@ function renderTrain(){
       statDiv.innerHTML=`<span style="font-family:var(--serif);font-size:28px">${latest.val} lbs</span>${delta!==null?`<span style="font-size:13px;color:${deltaColor}">${arrow}${Math.abs(delta)} lbs vs 7 days ago</span>`:''}`;
       bwSpark.appendChild(statDiv);
     }
+    const btEl=document.getElementById('bw-target');
+    if(btEl&&document.activeElement!==btEl)btEl.placeholder=S.weightTarget>0?'Target: '+S.weightTarget+' lbs':'Target weight (lbs)';
     const pts=S.weightLog.slice(-14);
     if(pts.length>=2){
+      const target=S.weightTarget||0;
       const vals=pts.map(p=>p.val);
-      const mn=Math.min(...vals),mx=Math.max(...vals);
+      const allVals=target>0?[...vals,target]:vals;
+      const mn=Math.min(...allVals),mx=Math.max(...allVals);
       const range=mx-mn||1;
       const W=240,H=48;
       const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
@@ -1043,7 +1167,16 @@ function renderTrain(){
       poly.setAttribute('stroke-width','2');
       poly.setAttribute('stroke-linejoin','round');
       svg.appendChild(poly);
-      // dots
+      if(target>0){
+        const ty=H-(target-mn)/range*(H-8)-4;
+        const tLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+        tLine.setAttribute('x1','0');tLine.setAttribute('x2',String(W));
+        tLine.setAttribute('y1',String(ty));tLine.setAttribute('y2',String(ty));
+        tLine.setAttribute('stroke','var(--good)');
+        tLine.setAttribute('stroke-width','1.5');
+        tLine.setAttribute('stroke-dasharray','4,3');
+        svg.appendChild(tLine);
+      }
       vals.forEach((v,i)=>{
         const cx=i/(vals.length-1)*W,cy=H-(v-mn)/range*(H-8)-4;
         const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -1054,7 +1187,8 @@ function renderTrain(){
       bwSpark.appendChild(svg);
       const minmax=document.createElement('div');
       minmax.style.cssText='display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px';
-      minmax.innerHTML=`<span>${mn} lbs</span><span>${mx} lbs</span>`;
+      const targetLabel=target>0?`<span style="color:var(--good)">— target: ${target} lbs</span>`:'';
+      minmax.innerHTML=`<span>${mn} lbs</span>${targetLabel}<span>${mx} lbs</span>`;
       bwSpark.appendChild(minmax);
     }
   }
@@ -1199,18 +1333,163 @@ function renderHome(){
   mbar.style.width=(monthly?Math.min(100,totalExp/monthly*100):0)+'%';
   mbar.style.background=totalExp>monthly?'#e05555':'var(--accent)';
   const ht=document.getElementById('h-tasks');ht.innerHTML='';
+  // Workout row
+  const wPlanName=(S.workouts||{})[todayIdx]||'';
+  const wIsDay=!!(S.workoutDays||{})[todayIdx];
+  const wLogged=((S.workoutLog||{})[todayKey]||[]).length>0;
+  if(wIsDay||wPlanName){
+    const wr=document.createElement('div');
+    wr.style.cssText='display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer';
+    const wcol=wLogged?'var(--good)':wIsDay?'var(--accent)':'var(--muted)';
+    const wLogLabel=wLogged?(wlogToday.length+' exercise'+(wlogToday.length!==1?'s':'')):wIsDay?'Due':'Rest';
+    wr.innerHTML=`<span style="font-size:14px;color:${wcol};flex-shrink:0">${wLogged?'✓':'▲'}</span><span style="flex:1;font-size:14px">${esc(wPlanName||'Workout')}</span><span style="font-size:12px;color:${wcol}">${wLogLabel}</span>`;
+    wr.onclick=()=>nav('train');ht.appendChild(wr);
+  }
+  // Tasks
   const next=tasks.filter(t=>!dm[t.id]).slice(0,4);
   if(!next.length){
-    if(tasks.length){ht.innerHTML=`<div style="text-align:center;padding:18px 0"><div style="font-size:28px;margin-bottom:6px">✓</div><div style="font-size:15px;font-weight:600;color:var(--good)">Today is locked in.</div><div style="font-size:13px;color:var(--muted);margin-top:4px">All ${tasks.length} task${tasks.length!==1?'s':''} complete.</div></div>`;}
-    else{ht.innerHTML='<div class="empty">No routine set — add tasks in Routine.</div>';}
+    if(tasks.length){const cel=document.createElement('div');cel.style.cssText='text-align:center;padding:16px 0';cel.innerHTML=`<div style="font-size:22px;margin-bottom:4px">✓</div><div style="font-size:14px;font-weight:600;color:var(--good)">All ${tasks.length} task${tasks.length!==1?'s':''} complete.</div>`;ht.appendChild(cel);}
+    else{const el=document.createElement('div');el.className='empty';el.textContent='No routine set — add tasks in Routine.';ht.appendChild(el);}
   }
   else next.forEach(t=>{const d=document.createElement('div');d.className='row';d.innerHTML=`<div class="check"></div><div class="label">${esc(t.t)}${t.time?`<div class="task-time">${esc(t.time)}</div>`:''}</div>`;
     d.querySelector('.check').onclick=()=>{(S.done[todayKey]||(S.done[todayKey]={}))[t.id]=true;save();render()};
     ht.appendChild(d);});
+  // Todos row — grouped with tasks since both are "things to do"
   const pendingTodos=(S.todos||[]).filter(t=>!t.done).length;
-  if(pendingTodos>0){const sep=document.createElement('div');sep.style.cssText='margin-top:10px;padding-top:10px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px';sep.innerHTML=`<span style="font-size:15px">□</span><span>${pendingTodos} to-do${pendingTodos!==1?'s':''} pending</span>`;sep.onclick=()=>nav('notes');ht.appendChild(sep);}
+  const urgentTodos=(S.todos||[]).filter(t=>!t.done&&t.urgent).length;
+  if(pendingTodos>0){
+    const sep=document.createElement('div');sep.style.cssText='display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);cursor:pointer';
+    const urgBadge=urgentTodos?` <span style="font-size:11px;background:var(--accent);color:#1a1206;border-radius:6px;padding:2px 7px;font-weight:700;margin-left:4px">${urgentTodos}!</span>`:'';
+    sep.innerHTML=`<span style="font-size:14px;color:var(--muted);flex-shrink:0">□</span><span style="flex:1;font-size:14px;color:var(--muted)">${pendingTodos} to-do${pendingTodos!==1?'s':''} pending${urgBadge}</span>`;
+    sep.onclick=()=>nav('notes');ht.appendChild(sep);
+  }
+  // Meal plan summary row + quick log
+  const todayPlan=(S.mealPlan||{})[todayIdx]||[];
+  const loggedMeals=((S.meals||{})[todayKey]||[]);
+  const loggedCount=loggedMeals.length;
+  const planCal=todayPlan.reduce((a,x)=>a+(+x.cal||0),0);
+  const mr=document.createElement('div');
+  mr.style.cssText='padding:11px 0;border-top:1px solid var(--line)';
+  const summaryLine=todayPlan.length
+    ?`${todayPlan.length} planned${planCal?' · '+planCal+' kcal':''} · ${loggedCount}/${todayPlan.length} logged`
+    :`${loggedCount} meal${loggedCount!==1?'s':''} logged today`;
+  mr.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer" onclick="nav('diet')">
+      <span style="font-size:14px;color:var(--muted);flex-shrink:0">🍴</span>
+      <span style="flex:1;font-size:14px;color:var(--muted)">${summaryLine}</span>
+      <span style="font-size:11px;color:var(--muted)">→</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <input id="hm-name" placeholder="Quick log a meal…" style="flex:1;font-size:13px;min-height:36px;padding:8px 12px">
+      <input id="hm-cal" type="number" inputmode="numeric" placeholder="kcal" style="width:52px;font-size:13px;min-height:36px;padding:8px 6px">
+      <input id="hm-pro" type="number" inputmode="numeric" placeholder="g pro" style="width:52px;font-size:13px;min-height:36px;padding:8px 6px">
+      <button style="background:var(--surface2);border:1px solid var(--line);color:var(--txt);border-radius:11px;font-size:13px;font-weight:600;min-height:36px;padding:0 12px;cursor:pointer;white-space:nowrap" onclick="quickLogMeal()">Log</button>
+    </div>`;
+  ht.appendChild(mr);
+  // Quick tip log row
+  const tipRow=document.createElement('div');
+  tipRow.style.cssText='padding:11px 0;border-top:1px solid var(--line)';
+  const monthKey=todayKey.slice(0,7);
+  const tipsToday=(S.tips||[]).filter(t=>t.date===todayKey).reduce((a,t)=>a+(+t.amt||0),0);
+  const tipsSummary=tipsToday>0?`Tips today: $${fmt(tipsToday)}`:'Log tips / variable income';
+  tipRow.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer" onclick="nav('money')">
+      <span style="font-size:14px;color:var(--muted);flex-shrink:0">$</span>
+      <span style="flex:1;font-size:14px;color:var(--muted)">${tipsSummary}</span>
+      <span style="font-size:11px;color:var(--muted)">→</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <input id="ht-amt" type="number" inputmode="decimal" placeholder="Amount earned today…" style="flex:1;font-size:13px;min-height:36px;padding:8px 12px">
+      <button style="background:var(--surface2);border:1px solid var(--line);color:var(--txt);border-radius:11px;font-size:13px;font-weight:600;min-height:36px;padding:0 12px;cursor:pointer;white-space:nowrap" onclick="quickLogTip()">Log</button>
+    </div>`;
+  ht.appendChild(tipRow);
+  // Quick weight log row — logging group (meals · tips · weight)
+  const todayWeight=(S.weightLog||[]).find(e=>e.date===todayKey);
+  const bwRow=document.createElement('div');
+  bwRow.style.cssText='padding:11px 0;border-top:1px solid var(--line)';
+  if(todayWeight){
+    const latestAll=S.weightLog.length>=2?S.weightLog[S.weightLog.length-2]:null;
+    const delta=latestAll&&latestAll.date!==todayKey?+(todayWeight.val-latestAll.val).toFixed(1):null;
+    const dStr=delta!==null?(delta>0?' ↑'+delta:' ↓'+Math.abs(delta)):'';
+    const dCol=delta===null?'var(--muted)':delta<0?'var(--good)':'#e07070';
+    bwRow.innerHTML=`<div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="nav('train')">
+      <span style="font-size:14px;color:var(--good);flex-shrink:0">⚖</span>
+      <span style="flex:1;font-size:14px;color:var(--muted)">Weight: <span style="color:var(--txt);font-weight:600">${todayWeight.val} lbs</span><span style="font-size:12px;color:${dCol}">${dStr}</span></span>
+      <span style="font-size:11px;color:var(--muted)">→</span>
+    </div>`;
+  }else{
+    bwRow.innerHTML=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer" onclick="nav('train')">
+      <span style="font-size:14px;color:var(--muted);flex-shrink:0">⚖</span>
+      <span style="flex:1;font-size:14px;color:var(--muted)">Log today's weight</span>
+      <span style="font-size:11px;color:var(--muted)">→</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <input id="hw-val" type="number" inputmode="decimal" placeholder="Weight (lbs)" style="flex:1;font-size:13px;min-height:36px;padding:8px 12px">
+      <button style="background:var(--surface2);border:1px solid var(--line);color:var(--txt);border-radius:11px;font-size:13px;font-weight:600;min-height:36px;padding:0 12px;cursor:pointer" onclick="quickLogWeight()">Log</button>
+    </div>`;
+  }
+  ht.appendChild(bwRow);
+  // Journal status row — last, as an end-of-day reflection
+  const journalEntry=(S.journal||{})[todayKey]||'';
+  const jRow=document.createElement('div');
+  jRow.style.cssText='display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);cursor:pointer';
+  const jHasEntry=journalEntry.trim().length>0;
+  const jColor=jHasEntry?'var(--good)':'var(--muted)';
+  const jIcon=jHasEntry?'✓':'✎';
+  const jLabel=jHasEntry?'Journal written today':'Write today\'s journal';
+  jRow.innerHTML=`<span style="font-size:14px;color:${jColor};flex-shrink:0">${jIcon}</span><span style="flex:1;font-size:14px;color:var(--muted)">${jLabel}</span><span style="font-size:11px;color:var(--muted)">→</span>`;
+  jRow.onclick=()=>openJournalModal();
+  ht.appendChild(jRow);
   renderGoals();
   renderStreaks();
+}
+
+function quickLogMeal(){
+  const n=document.getElementById('hm-name');
+  const c=document.getElementById('hm-cal');
+  const p=document.getElementById('hm-pro');
+  const v=(n&&n.value.trim())||'';if(!v)return;
+  const cal=c?+c.value||0:0;
+  const pro=p?+p.value||0:0;
+  (S.meals[todayKey]||(S.meals[todayKey]=[])).push({name:v,cal,pro});
+  if(n)n.value='';if(c)c.value='';if(p)p.value='';
+  save();render();toast(v+' logged');
+}
+function quickLogWeight(){
+  const i=document.getElementById('hw-val');
+  const v=parseFloat(i&&i.value);if(!v||v<=0)return;
+  if(!S.weightLog)S.weightLog=[];
+  S.weightLog.push({date:todayKey,val:v});
+  if(i)i.value='';
+  save();render();toast(v+' lbs logged');
+}
+function quickLogTip(){
+  const a=document.getElementById('ht-amt');
+  const v=parseFloat(a&&a.value);if(!v||v<=0)return;
+  if(!S.tips)S.tips=[];
+  S.tips.push({id:uid(),date:todayKey,amt:v});
+  if(a)a.value='';
+  save();render();toast('$'+fmt(v)+' logged');
+}
+function openJournalModal(){
+  const cur=(S.journal&&S.journal[todayKey])||'';
+  const d=new Date();
+  const label=d.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('dataModalContent').innerHTML=`
+    <h2 style="margin-bottom:6px">${label}</h2>
+    <textarea id="jm-ta" style="min-height:220px;font-size:15px;line-height:1.6" placeholder="Write anything — thoughts, wins, struggles, what you learned…">${esc(cur)}</textarea>
+    <div style="text-align:right;height:18px;margin-top:4px"><span id="jm-saved" style="font-size:12px;color:var(--accent);opacity:0;transition:opacity .3s">Saved ✓</span></div>`;
+  document.getElementById('dataModal').style.display='';
+  const ta=document.getElementById('jm-ta');
+  ta.addEventListener('input',()=>{
+    if(!S.journal)S.journal={};
+    S.journal[todayKey]=ta.value;
+    save();
+    const sv=document.getElementById('jm-saved');
+    if(sv){sv.style.opacity='1';clearTimeout(sv._t);sv._t=setTimeout(()=>sv.style.opacity='0',1800);}
+    renderHome();
+  });
+  setTimeout(()=>{ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length);},80);
 }
 
 /* ---------- GOALS ---------- */
@@ -1268,7 +1547,7 @@ function renderGoals(){
 function addTodo(){
   const i=document.getElementById('todo-inp');const v=i.value.trim();if(!v)return;
   if(!S.todos)S.todos=[];
-  S.todos.push({id:uid(),t:v,done:false});
+  S.todos.push({id:uid(),t:v,done:false,urgent:false});
   i.value='';save();renderTodos();
 }
 function toggleTodo(id){
@@ -1284,7 +1563,8 @@ function renderTodos(){
   if(!S.todos)S.todos=[];
   const el=document.getElementById('todosList');if(!el)return;
   el.innerHTML='';
-  const active=S.todos.filter(t=>!t.done),done=S.todos.filter(t=>t.done);
+  const active=[...S.todos.filter(t=>!t.done)].sort((a,b)=>(b.urgent?1:0)-(a.urgent?1:0));
+  const done=S.todos.filter(t=>t.done);
   if(!active.length&&!done.length){el.innerHTML='<div class="empty">Nothing here yet.</div>';return;}
   [...active,...done].forEach(item=>{
     const row=document.createElement('div');row.className='row'+(item.done?' done':'');
@@ -1292,10 +1572,22 @@ function renderTodos(){
     const chk=document.createElement('div');chk.className='check'+(item.done?' on':'');
     if(item.done)chk.textContent='✓';
     chk.onclick=()=>toggleTodo(item.id);
-    const label=document.createElement('div');label.className='label';label.style.flex='1';label.textContent=item.t;
+    const label=document.createElement('div');label.className='label';label.style.flex='1';
+    if(item.urgent&&!item.done)label.style.color='var(--accent)';
+    label.textContent=item.t;
     const del=document.createElement('button');del.className='del';del.textContent='×';
     del.onclick=function(){delConfirm(this,()=>deleteTodo(item.id));};
-    row.appendChild(chk);row.appendChild(label);row.appendChild(del);el.appendChild(row);
+    if(!item.done){
+      const urg=document.createElement('button');
+      urg.style.cssText=`background:none;border:1px solid ${item.urgent?'var(--accent)':'var(--line)'};color:${item.urgent?'var(--accent)':'var(--muted)'};border-radius:7px;font-size:12px;font-weight:700;min-width:32px;min-height:32px;cursor:pointer;flex-shrink:0`;
+      urg.textContent='!';
+      urg.title=item.urgent?'Remove urgent flag':'Mark as urgent';
+      urg.onclick=()=>{item.urgent=!item.urgent;save();renderTodos();renderHome();};
+      row.appendChild(chk);row.appendChild(label);row.appendChild(urg);row.appendChild(del);
+    } else {
+      row.appendChild(chk);row.appendChild(label);row.appendChild(del);
+    }
+    el.appendChild(row);
   });
   if(done.length){
     const btn=document.createElement('button');btn.className='btn ghost';
@@ -1307,6 +1599,7 @@ function renderTodos(){
 /* ---------- NOTES & JOURNAL ---------- */
 let showFullWorkoutHistory=false;
 let showAllPastJournal=false;
+let showAllTips=false;
 const expandedLibItems=new Set();
 
 function renderLibrary(arr,containerId,rerender){
@@ -1438,6 +1731,118 @@ function renderNotes(){
 }
 
 /* ---------- EXPORT / IMPORT ---------- */
+function showBackup(){
+  document.getElementById('dataModalContent').innerHTML=`
+    <h2 style="margin-bottom:4px">Data Backup</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Copy your data to clipboard, then paste into Apple Notes to keep a backup.</p>
+    <button class="btn" style="width:100%;margin-bottom:6px" onclick="copyBackup()">Copy backup to clipboard</button>
+    <p style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px">Paste into Notes app → safe backup</p>
+    <div style="display:flex;gap:8px;border-top:1px solid var(--line);padding-top:14px">
+      <button class="btn ghost" style="flex:1;font-size:13px" onclick="showExport()">View / Download</button>
+      <button class="btn ghost" style="flex:1;font-size:13px" onclick="showImport()">Restore</button>
+    </div>`;
+  document.getElementById('dataModal').style.display='';
+}
+function copyBackup(){
+  const json=JSON.stringify(S);
+  try{navigator.clipboard.writeText(json).then(()=>toast('Backup copied! Paste into Notes to save.'));}
+  catch(e){const ta=document.createElement('textarea');ta.value=json;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);toast('Backup copied! Paste into Notes to save.');}
+}
+function setWeightTarget(){
+  const v=parseFloat(document.getElementById('bw-target').value);
+  if(!v||v<=0)return;
+  S.weightTarget=v;
+  document.getElementById('bw-target').value='';
+  save();renderTrain();toast('Target set: '+v+' lbs');
+}
+/* ---------- ONBOARDING ---------- */
+let _obStep=1;
+function showOnboarding(){
+  _obStep=1;_renderObStep();
+  document.getElementById('dataModal').style.display='';
+}
+function _renderObStep(){
+  const content=document.getElementById('dataModalContent');
+  if(_obStep===1){
+    content.innerHTML=`
+      <div style="text-align:center;margin-bottom:16px">
+        <div style="font-size:36px;margin-bottom:8px">🔥</div>
+        <h2 style="margin-bottom:4px">Welcome to Forge</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:0">Step 1 of 3 — Set up your income</p>
+      </div>
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px">Annual salary</label>
+      <div style="position:relative;margin-bottom:12px">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">$</span>
+        <input id="ob-salary" type="number" inputmode="decimal" placeholder="0" style="width:100%;padding-left:26px;box-sizing:border-box">
+      </div>
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px">Or monthly take-home</label>
+      <div style="position:relative;margin-bottom:20px">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">$</span>
+        <input id="ob-monthly" type="number" inputmode="decimal" placeholder="0" style="width:100%;padding-left:26px;box-sizing:border-box">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" style="flex:1" onclick="skipOnboarding()">Skip setup</button>
+        <button class="btn" style="flex:1" onclick="obNext1()">Next →</button>
+      </div>`;
+  }else if(_obStep===2){
+    content.innerHTML=`
+      <div style="text-align:center;margin-bottom:16px">
+        <h2 style="margin-bottom:4px">Savings Goal</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:0">Step 2 of 3 — Set a target to work toward</p>
+      </div>
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px">Savings goal (optional)</label>
+      <div style="position:relative;margin-bottom:12px">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">$</span>
+        <input id="ob-goal" type="number" inputmode="decimal" placeholder="0" style="width:100%;padding-left:26px;box-sizing:border-box">
+      </div>
+      <label style="font-size:12px;color:var(--muted);display:block;margin-bottom:5px">Current savings balance</label>
+      <div style="position:relative;margin-bottom:20px">
+        <span style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px;pointer-events:none">$</span>
+        <input id="ob-savings" type="number" inputmode="decimal" placeholder="0" style="width:100%;padding-left:26px;box-sizing:border-box">
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" style="flex:1" onclick="skipOnboarding()">Skip</button>
+        <button class="btn" style="flex:1" onclick="obNext2()">Next →</button>
+      </div>`;
+  }else if(_obStep===3){
+    const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    const btns=days.map((d,i)=>`<button class="sec-btn ob-day${S.workoutDays[i]?' ob-sel':''}" data-i="${i}" onclick="this.classList.toggle('ob-sel')" style="min-height:44px;flex:1">${d}</button>`).join('');
+    content.innerHTML=`
+      <div style="text-align:center;margin-bottom:16px">
+        <h2 style="margin-bottom:4px">Workout Days</h2>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:0">Step 3 of 3 — Which days do you train?</p>
+      </div>
+      <div style="display:flex;gap:5px;margin-bottom:20px">${btns}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn ghost" style="flex:1" onclick="skipOnboarding()">Skip</button>
+        <button class="btn" style="flex:1" onclick="obFinish()">Let's go!</button>
+      </div>`;
+  }
+}
+function obNext1(){
+  const sal=parseFloat(document.getElementById('ob-salary')?.value)||0;
+  const mon=parseFloat(document.getElementById('ob-monthly')?.value)||0;
+  if(sal>0)S.salary=sal;
+  if(mon>0)S.monthlyIncome=mon;
+  save();_obStep=2;_renderObStep();
+}
+function obNext2(){
+  const goal=parseFloat(document.getElementById('ob-goal')?.value)||0;
+  const sav=parseFloat(document.getElementById('ob-savings')?.value)||0;
+  if(goal>0)S.savingsGoal=goal;
+  if(sav>0)S.savings=sav;
+  save();_obStep=3;_renderObStep();
+}
+function obFinish(){
+  document.querySelectorAll('.ob-day.ob-sel').forEach(b=>{S.workoutDays[parseInt(b.dataset.i)]=true;});
+  S.onboardingDone=true;save();
+  document.getElementById('dataModal').style.display='none';
+  render();toast('Setup complete — welcome to Forge!');
+}
+function skipOnboarding(){
+  S.onboardingDone=true;save();
+  document.getElementById('dataModal').style.display='none';
+}
 function showExport(){
   const json=JSON.stringify(S,null,2);
   const modal=document.getElementById('dataModal');
@@ -1489,7 +1894,7 @@ function esc(s){return (s+'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':
 function fmt(n){return (+n||0).toLocaleString(undefined,{maximumFractionDigits:2})}
 
 // enter-to-add on key inputs
-['newTask','newTaskTime','m-name','e-name','wa-name','p-name','we-name','note-title','routine-title','recipe-title','bw-val','goal-inp','todo-inp','tip-amt','tax-rate','sal-amt'].forEach(id=>{
+['newTask','newTaskTime','m-name','e-name','wa-name','p-name','we-name','note-title','routine-title','recipe-title','bw-val','bw-target','goal-inp','todo-inp','tip-amt','tax-rate','sal-amt'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();
     if(id==='newTask'||id==='newTaskTime')addTask();
@@ -1502,6 +1907,7 @@ function fmt(n){return (+n||0).toLocaleString(undefined,{maximumFractionDigits:2
     else if(id==='routine-title')addRoutine();
     else if(id==='recipe-title')addRecipe();
     else if(id==='bw-val')addBodyWeight();
+    else if(id==='bw-target')setWeightTarget();
     else if(id==='goal-inp')addGoal();
     else if(id==='todo-inp')addTodo();
     else if(id==='tip-amt')addTip();
@@ -1509,7 +1915,32 @@ function fmt(n){return (+n||0).toLocaleString(undefined,{maximumFractionDigits:2
     else if(id==='sal-amt')setSalary();}});
 });
 
-setHeader();render();
+setHeader();nav(S.lastTab||'home');
+if(!S.onboardingDone){
+  const hasExistingData=S.salary>0||S.monthlyIncome>0||(S.tips&&S.tips.length>0)||Object.values(S.tasks||{}).some(a=>a.length>0);
+  if(hasExistingData){S.onboardingDone=true;save();}
+  else{setTimeout(showOnboarding,400);}
+}
+// Last-performance hint on exercise input
+(function(){
+  const inp=document.getElementById('we-name');
+  const hint=document.getElementById('we-hint');
+  if(!inp||!hint)return;
+  inp.addEventListener('input',()=>{
+    const name=inp.value.trim().toLowerCase();
+    if(!name){hint.textContent='';return;}
+    let best=null,bestDate='';
+    Object.entries(S.workoutLog||{}).forEach(([k,entries])=>{
+      entries.forEach(e=>{if((e.name||'').toLowerCase()===name&&k>=bestDate){bestDate=k;best=e;}});
+    });
+    if(best&&bestDate){
+      const d=new Date(bestDate+'T12:00:00');
+      const lbl=d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+      const parts=[best.sets&&best.sets+' sets',best.reps&&best.reps+' reps',best.weight&&best.weight+' lbs'].filter(Boolean).join(' · ');
+      hint.textContent='Last: '+(parts||'logged')+' · '+lbl;
+    } else {hint.textContent='';}
+  });
+})();
 </script>
 </body>
 </html>
